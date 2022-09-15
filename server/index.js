@@ -1,16 +1,28 @@
 require('dotenv').config()
-
+const { Pool } = require('pg')
 const express = require('express')
-const mongoose = require('mongoose')
 const productsRouter = require('./routes/products')
 const app = express()
 
-mongoose.connect(process.env.DATABASE_URL)
-const db = mongoose.connection
-db.on('error', (error) => {
-  console.log(error)
-})
-db.once('open', () => console.log('Connected to database'))
+const credentials = {
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  port: process.env.PGPORT,
+}
+
+async function poolDemo() {
+  const pool = new Pool(credentials);
+  const now = await pool.query("SELECT NOW()");
+  await pool.end();
+
+  return now;
+}
+
+(async () => {
+  const poolResult = await poolDemo();
+  console.log("Time with pool: " + poolResult.rows[0]["now"]);
+})();
 
 app.use(express.json())
 app.use('/products', productsRouter)
