@@ -1,16 +1,16 @@
 const express = require('express')
+const mongoose = require('mongoose')
 const { Products, Styles, Test } = require('./../models/products')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
   // get all products
-  res.send('these are the products')
-  // try {
-  //   const products = await Products.find()
-  //   res.json(products)
-  // } catch (err) {
-  //   res.status(500).json({ message: err.message })
-  // }
+  try {
+    const products = await Products.find()
+    res.json(products)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
 })
 
 router.get('/:product_id', (req, res) => {
