@@ -18,64 +18,55 @@ module.exports = {
 ;(async function() {
   const client = await pool.connect()
   await client.query(
-    `CREATE TABLE IF NOT EXISTS test (
+    `CREATE TABLE IF NOT EXISTS products (
       id SERIAL PRIMARY KEY,
       name VARCHAR,
       slogan VARCHAR,
       description VARCHAR,
       category VARCHAR,
-      default_price VARCHAR
-    );
-
-    CREATE TABLE IF NOT EXISTS products (
-      id VARCHAR PRIMARY KEY,
-      name VARCHAR,
-      slogan VARCHAR,
-      description VARCHAR,
-      category VARCHAR,
-      default_price VARCHAR
+      default_price INTEGER
     );
 
     CREATE TABLE IF NOT EXISTS related (
-      id VARCHAR PRIMARY KEY,
-      current_product_id VARCHAR REFERENCES products(id),
-      related_product_id VARCHAR
+      id SERIAL PRIMARY KEY,
+      current_product_id INT REFERENCES products(id),
+      related_product_id INT
       );
 
     CREATE TABLE IF NOT EXISTS features (
-      id VARCHAR PRIMARY KEY,
-      product_id VARCHAR REFERENCES products(id),
+      id SERIAL PRIMARY KEY,
+      product_id INT REFERENCES products(id),
       feature VARCHAR,
       value VARCHAR
     );
 
     CREATE TABLE IF NOT EXISTS styles (
-      id VARCHAR PRIMARY KEY,
-      product_id VARCHAR REFERENCES products(id),
+      id SERIAL PRIMARY KEY,
+      product_id INT REFERENCES products(id),
       name VARCHAR,
-      sale_price VARCHAR,
-      original_price VARCHAR,
-      default_style VARCHAR
+      sale_price INT,
+      original_price INT,
+      default_style INT
     );
 
     CREATE TABLE IF NOT EXISTS photos (
-      id VARCHAR PRIMARY KEY,
-      style_id VARCHAR REFERENCES styles(id),
+      id SERIAL PRIMARY KEY,
+      style_id INT REFERENCES styles(id),
       url VARCHAR,
       thumbnail_url VARCHAR
     );
 
     CREATE TABLE IF NOT EXISTS skus (
-      id VARCHAR PRIMARY KEY,
-      style_id VARCHAR REFERENCES styles(id),
+      id SERIAL PRIMARY KEY,
+      style_id INT REFERENCES styles(id),
       size VARCHAR,
-      quantity VARCHAR
+      quantity INT
     );
 
     CREATE TABLE IF NOT EXISTS cart (
-      id VARCHAR PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       user_session VARCHAR,
-      product_id VARCHAR REFERENCES products(id),
+      product_id INT REFERENCES products(id),
       active VARCHAR
     );`
   )
