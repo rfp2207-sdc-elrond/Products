@@ -3,7 +3,7 @@ const express = require('express')
 const productsRouter = require('./routes/products')
 const app = express()
 
-const pool = require('./db')
+const db = require('./db')
 
 app.use(express.json())
 app.use('/products', productsRouter)
