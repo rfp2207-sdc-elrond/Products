@@ -4,8 +4,11 @@ const router = express.Router()
 
 // get all products
 router.get('/', (req, res) => {
-  const query = 'EXPLAIN ANALYZE SELECT * FROM products limit 5'
-  const params = []
+  const count = parseInt(req.query.count) || 5
+  const page = parseInt(req.query.page) || 1
+  const offset = ( page - 1 ) * count
+  const query = 'SELECT id, name, slogan, description, category, default_price FROM products ORDER BY id ASC LIMIT $1 OFFSET $2'
+  const params = [count, offset]
   db.query(query, params, (err, result) => {
     if (err) {
       console.log(err)
