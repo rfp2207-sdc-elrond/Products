@@ -46,7 +46,7 @@ module.exports = {
       name VARCHAR,
       sale_price INT,
       original_price INT,
-      default_style INT
+      default_style BOOLEAN
     );
 
     CREATE TABLE IF NOT EXISTS photos (
