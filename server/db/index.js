@@ -24,7 +24,10 @@ module.exports = {
       slogan VARCHAR,
       description VARCHAR,
       category VARCHAR,
-      default_price INTEGER
+      default_price INTEGER,
+      features JSON,
+      related JSON,
+      styles JSON
     );
 
     CREATE TABLE IF NOT EXISTS related (
@@ -46,7 +49,9 @@ module.exports = {
       name VARCHAR,
       sale_price INT,
       original_price INT,
-      default_style BOOLEAN
+      default_style BOOLEAN,
+      photos JSON,
+      skus JSON
     );
 
     CREATE TABLE IF NOT EXISTS photos (

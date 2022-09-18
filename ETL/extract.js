@@ -16,19 +16,22 @@ const credentials = {
 
 const db = pgp(credentials);
 
-const initializeDB = async() => {
-  // await db.any(
-  //   `COPY products
-  //   FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/product.csv' DELIMITER ',' CSV HEADER;`
-  // )
-  // await db.any(
-  //   `COPY related
-  //   FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/related.csv' DELIMITER ',' CSV HEADER;`
-  // )
-  // await db.any(
-  //   `COPY features
-  //   FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/features.csv' DELIMITER ',' CSV HEADER;`
-  // )
+const loadData = async() => {
+  await db.any(
+    `DROP TABLE IF EXISTS cart, skus, photos, features, related, styles, products;`
+  )
+  await db.any(
+    `COPY products
+    FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/product.csv' DELIMITER ',' CSV HEADER;`
+  )
+  await db.any(
+    `COPY related
+    FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/related.csv' DELIMITER ',' CSV HEADER;`
+  )
+  await db.any(
+    `COPY features
+    FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/features.csv' DELIMITER ',' CSV HEADER;`
+  )
   await db.any(
     `COPY styles
     FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/styles.csv' DELIMITER ',' NULL as 'null' CSV HEADER;`
@@ -41,13 +44,13 @@ const initializeDB = async() => {
     `COPY skus
     FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/skus.csv' DELIMITER ',' CSV HEADER;`
   )
-  // await db.any(
-  //   `COPY cart
-  //   FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/cart.csv' DELIMITER ',' CSV HEADER;`
-  // )
+  await db.any(
+    `COPY cart
+    FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/cart.csv' DELIMITER ',' CSV HEADER;`
+  )
 };
 
-initializeDB();
+loadData();
 
 
 
