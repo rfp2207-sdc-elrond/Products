@@ -10,15 +10,66 @@ const pgp = require('pg-promise')(initOptions);
 const credentials = {
   user: process.env.PGUSER,
   host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
+  database: process.env.PGDATABASESTAGE,
   port: process.env.PGPORT,
 }
 
 const db = pgp(credentials);
 
-const loadData = async() => {
+const extractData = async() => {
   await db.any(
-    `DROP TABLE IF EXISTS cart, skus, photos, features, related, styles, products;`
+    `DROP TABLE IF EXISTS skus, photos, features, related, styles, products;`
+  )
+  await db.any(
+    `CREATE TABLE IF NOT EXISTS products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR,
+    slogan VARCHAR,
+    description VARCHAR,
+    category VARCHAR,
+    default_price VARCHAR
+    );`
+  )
+  await db.any(
+    `CREATE TABLE IF NOT EXISTS related (
+    id SERIAL PRIMARY KEY,
+    current_product_id INT REFERENCES products(id),
+    related_product_id INT
+    );`
+  )
+  await db.any(
+    `CREATE TABLE IF NOT EXISTS features (
+    id SERIAL PRIMARY KEY,
+    product_id INT REFERENCES products(id),
+    feature VARCHAR,
+    value VARCHAR
+    );`
+  )
+  await db.any(
+    `CREATE TABLE IF NOT EXISTS styles (
+    id SERIAL PRIMARY KEY,
+    product_id INT REFERENCES products(id),
+    name VARCHAR,
+    sale_price VARCHAR,
+    original_price VARCHAR,
+    default_style BOOLEAN
+    );`
+  )
+  await db.any(
+    `CREATE TABLE IF NOT EXISTS photos (
+    id SERIAL PRIMARY KEY,
+    style_id INT REFERENCES styles(id),
+    url VARCHAR,
+    thumbnail_url VARCHAR
+    );`
+  )
+  await db.any(
+    `CREATE TABLE IF NOT EXISTS skus (
+    id SERIAL PRIMARY KEY,
+    style_id INT REFERENCES styles(id),
+    size VARCHAR,
+    quantity INT
+    );`
   )
   await db.any(
     `COPY products
@@ -44,13 +95,9 @@ const loadData = async() => {
     `COPY skus
     FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/skus.csv' DELIMITER ',' CSV HEADER;`
   )
-  await db.any(
-    `COPY cart
-    FROM '/Users/danielzweig/Desktop/HackReactor/SDC/Products/data/cart.csv' DELIMITER ',' CSV HEADER;`
-  )
 };
 
-loadData();
+extractData();
 
 
 

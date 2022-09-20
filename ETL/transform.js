@@ -10,7 +10,7 @@ const pgp = require('pg-promise')(initOptions);
 const credentials = {
   user: process.env.PGUSER,
   host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
+  database: process.env.PGDATABASESTAGE,
   port: process.env.PGPORT,
 }
 
@@ -19,6 +19,15 @@ const db = pgp(credentials);
 const transformData = async() => {
   await db.any(
     `DROP TABLE IF EXISTS featuresTemp, relatedTemp, photosTemp, skusTemp, stylesTemp;`
+  )
+  await db.any(
+    `ALTER TABLE products ADD COLUMN features JSON,
+    ADD COLUMN related JSON,
+    ADD COLUMN styles JSON;`
+  )
+  await db.any(
+    `ALTER TABLE styles ADD COLUMN photos JSON,
+    ADD COLUMN skus JSON;`
   )
   await db.any(
     `SELECT "features"."product_id", json_agg(json_build_object('feature', features.feature, 'value', features.value)) as features

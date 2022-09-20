@@ -2,6 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const productsRouter = require('./routes/products')
 const app = express()
+const cors = require('cors')
+app.use(cors())
 
 const db = require('./db')
 

@@ -24,55 +24,10 @@ module.exports = {
       slogan VARCHAR,
       description VARCHAR,
       category VARCHAR,
-      default_price INTEGER,
+      default_price VARCHAR,
       features JSON,
       related JSON,
       styles JSON
-    );
-
-    CREATE TABLE IF NOT EXISTS related (
-      id SERIAL PRIMARY KEY,
-      current_product_id INT REFERENCES products(id),
-      related_product_id INT
-      );
-
-    CREATE TABLE IF NOT EXISTS features (
-      id SERIAL PRIMARY KEY,
-      product_id INT REFERENCES products(id),
-      feature VARCHAR,
-      value VARCHAR
-    );
-
-    CREATE TABLE IF NOT EXISTS styles (
-      id SERIAL PRIMARY KEY,
-      product_id INT REFERENCES products(id),
-      name VARCHAR,
-      sale_price INT,
-      original_price INT,
-      default_style BOOLEAN,
-      photos JSON,
-      skus JSON
-    );
-
-    CREATE TABLE IF NOT EXISTS photos (
-      id SERIAL PRIMARY KEY,
-      style_id INT REFERENCES styles(id),
-      url VARCHAR,
-      thumbnail_url VARCHAR
-    );
-
-    CREATE TABLE IF NOT EXISTS skus (
-      id SERIAL PRIMARY KEY,
-      style_id INT REFERENCES styles(id),
-      size VARCHAR,
-      quantity INT
-    );
-
-    CREATE TABLE IF NOT EXISTS cart (
-      id SERIAL PRIMARY KEY,
-      user_session VARCHAR,
-      product_id INT REFERENCES products(id),
-      active VARCHAR
     );`
   )
   client.release()
