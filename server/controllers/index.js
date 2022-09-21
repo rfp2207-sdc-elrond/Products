@@ -1,5 +1,13 @@
 const model = require('../models')
 
+const productIDCache = {}
+const stylesCache = {}
+const relatedCache = {}
+
+const saveToCache = (cache, id, results) => {
+  cache[id] = results
+}
+
 module.exports = {
   getAllProducts: (req, res) => {
     const count = parseInt(req.query.count) || 5
@@ -17,35 +25,52 @@ module.exports = {
   },
   getOneProduct: (req, res) => {
     const params = [req.params.product_id]
-    model.findOne(params, (err, result) => {
-      if(err) {
-        console.log(err)
-        res.status(500).send()
-      } else {
-        res.send(result.rows[0])
-      }
-    })
+    if (req.params.product_id in productIDCache) {
+      res.send(productIDCache[req.params.product_id])
+    } else {
+      model.findOne(params, (err, result) => {
+        if(err) {
+          console.log(err)
+          res.status(500).send()
+        } else {
+          saveToCache(productIDCache, req.params.product_id, result.rows[0])
+          res.send(result.rows[0])
+        }
+      })
+    }
   },
   getStyles: (req, res) => {
     const params = [req.params.product_id]
-    model.findStyles(params, (err, result) => {
-      if(err) {
-        console.log(err)
-        res.status(500).send()
-      } else {
-        res.send(result.rows[0])
-      }
-    })
+    if (req.params.product_id in stylesCache) {
+      res.send(stylesCache[req.params.product_id])
+    } else {
+      model.findStyles(params, (err, result) => {
+        if(err) {
+          console.log(err)
+          res.status(500).send()
+        } else {
+          saveToCache(stylesCache, req.params.product_id, result.rows[0])
+          res.send(result.rows[0])
+        }
+      })
+    }
   },
   getRelated: (req, res) => {
+    // console.log(relatedCache)
     const params = [req.params.product_id]
-    model.findRelated(params, (err, result) => {
-      if(err) {
-        console.log(err)
-        res.status(500).send()
-      } else {
-        res.send(result.rows[0].related)
-      }
-    })
+    if (req.params.product_id in relatedCache) {
+      res.send(relatedCache[req.params.product_id])
+    } else {
+      model.findRelated(params, (err, result) => {
+        if(err) {
+          console.log(err)
+          res.status(500).send()
+        } else {
+          console.log(result.rows)
+          saveToCache(relatedCache, req.params.product_id, result.rows[0].related)
+          res.send(result.rows[0].related)
+        }
+      })
+    }
   }
 }
