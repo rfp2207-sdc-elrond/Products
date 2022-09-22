@@ -33,8 +33,8 @@ module.exports = {
           console.log(err)
           res.status(500).send()
         } else {
-          saveToCache(productIDCache, req.params.product_id, result.rows[0])
           res.send(result.rows[0])
+          saveToCache(productIDCache, req.params.product_id, result.rows[0])
         }
       })
     }
@@ -49,14 +49,13 @@ module.exports = {
           console.log(err)
           res.status(500).send()
         } else {
-          saveToCache(stylesCache, req.params.product_id, result.rows[0])
           res.send(result.rows[0])
+          saveToCache(stylesCache, req.params.product_id, result.rows[0])
         }
       })
     }
   },
   getRelated: (req, res) => {
-    // console.log(relatedCache)
     const params = [req.params.product_id]
     if (req.params.product_id in relatedCache) {
       res.send(relatedCache[req.params.product_id])
@@ -66,9 +65,8 @@ module.exports = {
           console.log(err)
           res.status(500).send()
         } else {
-          console.log(result.rows)
-          saveToCache(relatedCache, req.params.product_id, result.rows[0].related)
           res.send(result.rows[0].related)
+          saveToCache(relatedCache, req.params.product_id, result.rows[0].related)
         }
       })
     }
